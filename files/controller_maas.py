@@ -23,12 +23,12 @@ import requests
 
 
 class Token(object):
-    def __init__(self, url, auth):
+    def __init__(self, url, username, password):
         self.type = 'maas'
         self.supportlxd = True
         self.url = url
-        self.user = auth.username
-        self.password = auth.password
+        self.user = username
+        self.password = password
         self.api_key = self.get_user_api_key()
         self.login()
 
@@ -89,7 +89,8 @@ def get_supported_series():
 # Not needed for now
 #####################################################################################
 # def list_users(maas_token):
-#     users = json.loads(check_output(['maas', maas_token.user, 'users', 'read'], universal_newlines=True))
+#     users = json.loads(check_output(['maas', maas_token.user, 'users',
+# 'read'], universal_newlines=True))
 #     return [u['username'] for u in users]
 
 
