@@ -32,12 +32,6 @@ class Token(object):
         self.api_key = self.get_user_api_key()
         self.login()
 
-    def get_credentials(self):
-        return {'auth-type': 'oauth1', 'maas-oath': self.api_key}
-
-    def get_cloud(self):
-        return {'type': 'maas', 'auth-types': ['oauth1'], 'endpoint': self.url}
-
     def login(self):
         return check_output(['maas', 'login', self.user, self.url, self.api_key])
 
