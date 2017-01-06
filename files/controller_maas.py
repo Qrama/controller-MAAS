@@ -16,6 +16,7 @@
 # pylint: disable=c0111,c0301,c0325, r0903,w0406
 
 # import json
+import os
 from subprocess import check_call, check_output
 from lxml import html
 import yaml
@@ -53,7 +54,7 @@ def create_controller(name, region, credentials):
     print('called')
     cloudname = 'maas-{}'.format(name)
     cloud_path = create_cloud_file(cloudname, region)
-    cred_path = create_credentials_file(cloudname, credentials)
+    cred_path = create_credentials_file(cloudname, name, credentials)
     check_call(['juju', 'add-cloud', cloudname, cloud_path])
     check_call(['juju', 'add-credential', cloudname, '-f', cred_path])
     return check_output(['juju', 'bootstrap', cloudname, name])
@@ -69,9 +70,10 @@ def create_cloud_file(name, endpoint):
     return path
 
 
-def create_credentials_file(name, credentials):
+def create_credentials_file(name, c_name, credentials):
     path = '/tmp/credentials.yaml'
-    data = {'credentials': {name: {credentials['username']: {'auth-type': 'oauth1', 'maas-oauth': credentials['api_key']}}}}
+    data = {'credentials': {name: {c_name: {'auth-type': 'oauth1',
+                                            'maas-oauth': credentials['api_key']}}}}
     with open(path, "w") as y_file:
         yaml.dump(data, y_file, default_flow_style=True)
     return path
