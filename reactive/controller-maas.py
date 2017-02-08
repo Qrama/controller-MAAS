@@ -16,17 +16,17 @@
 # pylint: disable=c0111,c0301,c0325, r0903,w0406
 
 from os import remove
-import requests
 from shutil import copyfile
 
-from charms.reactive import when_not, hook, set_state
+from charms.reactive import when, when_not, set_state, remove_state
 from charmhelpers.core.hookenv import status_set, charm_dir
 from charmhelpers.core.host import service_restart, chownr
 
 
+@when('sojobo.available')
 @when_not('controller-maas.installed')
-def install():
-    api_dir = requests.get('http://localhost:5000').json()['api_dir']
+def install(sojobo):
+    api_dir = list(sojobo.connection())[0]['api-dir']
     copyfile('{}/files/controller_maas.py'.format(charm_dir()), '{}/controllers/controller_maas.py'.format(api_dir))
     chownr(api_dir, 'sojobo', 'www-data', chowntopdir=True)
     service_restart('nginx')
@@ -34,8 +34,9 @@ def install():
     set_state('controller-maas.installed')
 
 
-@hook('stop')
-def remove_controller():
-    api_dir = requests.get('http://localhost:5000').json()['api_dir']
+@when('sojobo.removed')
+def remove_controller(sojobo):
+    api_dir = list(sojobo.connection())[0]['api-dir']
     remove('{}/controllers/controller_maas.py'.format(api_dir))
     service_restart('nginx')
+    remove_state('controller-maas.installed')
