@@ -7,7 +7,7 @@ To enable the testbench:
 * Add a relation to the Sojobo-api
 
 # Bugs
-Report bugs on <a href="https://github.com/Qrama/controller-MAAS/issues">Github</a>
+Report bugs on <a href="https://github.com/tengu-team/layer-controller-maas/issues">Github</a>
 
 # Author
 Mathijs Moerman <a href="mailto:mathijs.moerman@qrama.io">mathijs.moerman@qrama.io</a>
